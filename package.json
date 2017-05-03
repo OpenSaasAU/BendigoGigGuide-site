@@ -1,10 +1,10 @@
 {
-  "name": "sydjs-site",
+  "name": "BendigoGigGuide-site",
   "version": "3.0.0",
   "private": true,
   "repository": {
     "type": "git",
-    "url": "https://github.com/JedWatson/sydjs-site.git"
+    "url": "https://github.com/OpensaasAU/BendigoGigGuide-site"
   },
   "dependencies": {
     "async": "1.5.2",
@@ -24,8 +24,8 @@
     "express-graphql": "0.4.13",
     "graphql": "0.4.18",
     "graphql-relay": "0.3.6",
-    "jade": "1.11.0",
-    "keystone": "https://github.com/keystonejs/keystone.git#f3083c",
+    "pug": "2.0.0-rc.1",
+    "keystone": "^4.0.0-beta.5",
     "lodash": "3.10.1",
     "moment": "2.12.0",
     "newrelic": "1.26.2",
@@ -34,11 +34,12 @@
     "passport-github": "1.1.0",
     "passport-google-oauth": "^0.2.0",
     "passport-twitter": "1.0.4",
-    "react": "0.14.8",
-    "react-dom": "0.14.8",
+    "react": "15.5.4",
+    "react-dom": "15.5.4",
     "request": "2.69.0",
     "store-prototype": "1.1.1",
-    "superagent": "1.8.5"
+    "superagent": "1.8.5",
+    "facebook-events-by-location-core": "0.3.0"
   },
   "engines": {
     "node": "~4.2.0",

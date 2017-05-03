@@ -19,8 +19,8 @@ var pkg = require('./package.json');
 
 keystone.init({
 
-	'name': 'SydJS',
-	'brand': 'SydJS',
+	'name': 'Bendigo Gig Guide',
+	'brand': 'Bendigo Gig Guide',
 	'back': '/me',
 
 	'favicon': 'public/favicon.ico',
@@ -28,7 +28,7 @@ keystone.init({
 	'static': 'public',
 
 	'views': 'templates/views',
-	'view engine': 'jade',
+	'view engine': 'pug',
 	'view cache': false,
 
 	'emails': 'templates/emails',
