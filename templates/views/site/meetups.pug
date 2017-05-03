@@ -1,5 +1,5 @@
 extends ../../layouts/default
-include ../../mixins/meetup
+include ../../mixins/gig
 
 block intro
 	.container-sm
@@ -23,10 +23,10 @@ block content
 			each meetup, i in pastMeetups
 				.timeline-item(class=i % 2 == 1 ? 'timeline-item--even' : 'timeline-item--odd')
 					.timeline-item-node
-					a(href=meetup.url).timeline-item-inner
-						h6.text-caps.text-danger= meetup._.startDate.format('YYYY - MMMM ')
-						h4= meetup.name
-						!=utils.cropString( utils.htmlToText(meetup.description), 240, '...', true )
+					a(href=gig.url).timeline-item-inner
+						h6.text-caps.text-danger= gig._.startDate.format('YYYY - MMMM ')
+						h4= gig.name
+						!=utils.cropString( utils.htmlToText(gig.description), 240, '...', true )
 						//- !=utils.htmlToText(meetup.description)
 		
 		if !upcomingMeetup && !pastMeetups.length

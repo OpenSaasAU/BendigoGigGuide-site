@@ -38,7 +38,7 @@ exports = module.exports = function(req, res) {
 		function(next) {
 			if (!data.meetups.last) return next();
 			keystone.list('Talk').model.find()
-				.where('meetup', data.meetups.last)
+				.where('gig', data.meetups.last)
 				.populate('who')
 				.sort('sortOrder')
 				.exec(function(err, talks) {
@@ -51,7 +51,7 @@ exports = module.exports = function(req, res) {
 		function(next) {
 			if (!data.meetups.next) return next();
 			keystone.list('Talk').model.find()
-				.where('meetup', data.meetups.next)
+				.where('gig', data.meetups.next)
 				.populate('who')
 				.sort('sortOrder')
 				.exec(function(err, talks) {
@@ -66,7 +66,7 @@ exports = module.exports = function(req, res) {
 			if (!data.meetups.next) return next();
 			keystone.list('RSVP').model.findOne()
 				.where('who', data.user)
-				.where('meetup', data.meetups.next)
+				.where('gig', data.meetups.next)
 				.exec(function(err, rsvp) {
 					data.rsvp = rsvp;
 					return next();

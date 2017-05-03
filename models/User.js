@@ -31,7 +31,7 @@ User.add({
 	isPublic: { type: Boolean, default: true },
 	isOrganiser: Boolean,
     isGroup: Boolean,
-	organisation: { type: Types.Relationship, ref: 'Organisation' },
+	venue: { type: Types.Relationship, ref: 'Venue' },
 	photo: { type: Types.CloudinaryImage },
 	github: { type: String, width: 'short' },
 	twitter: { type: String, width: 'short' },
@@ -41,7 +41,7 @@ User.add({
 }, 'Notifications', {
 	notifications: {
 		posts: { type: Boolean },
-		meetups: { type: Boolean, default: true }
+		gigs: { type: Boolean, default: true }
 	}
 }, 'Mentoring', {
 	mentoring: {
@@ -53,7 +53,7 @@ User.add({
 		want: { type: String, label: 'Wants...', dependsOn: deps.mentoring }
 	}
 }, 'Permissions', {
-	isAdmin: { type: Boolean, label: 'Can Admin SydJS' },
+	isAdmin: { type: Boolean, label: 'Can Admin Bendigo Gig Guie' },
 	isVerified: { type: Boolean, label: 'Has a verified email address' }
 }, 'Services', {
 	services: {

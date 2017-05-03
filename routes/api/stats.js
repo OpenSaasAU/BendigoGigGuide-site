@@ -2,7 +2,7 @@ var async = require('async'),
 	moment = require('moment'),
 	keystone = require('keystone');
 
-var Meetup = keystone.list('Meetup'),
+var Gig = keystone.list('Gig'),
 	RSVP = keystone.list('RSVP'),
 	User = keystone.list('User'),
 	Post = keystone.list('Post');
@@ -15,14 +15,14 @@ exports = module.exports = function(req, res) {
 	
 		function(next) {
 			
-			Meetup.model.findOne()
+			Gig.model.findOne()
 				.where('startDate').gte(moment().startOf('day').toDate())
 				.where('state', 'published')
 				.sort('startDate')
-				.exec(function(err, meetup) {
+				.exec(function(err, gig) {
 				
 					RSVP.model.count({
-						meetup: meetup,
+						gig: gig,
 						attending: true
 					})
 					.exec(function(err, count) {

@@ -1,15 +1,15 @@
 var _ = require('lodash');
 var async = require('async');
 var keystone = require('keystone');
-var Meetup = keystone.list('Meetup');
+var Gig = keystone.list('Gig');
 var RSVP = keystone.list('RSVP');
 
 exports = module.exports = function(req, res) {
 
-	var meetupId = req.params.id;
+	var gigId = req.params.id;
 
 	var rtn = {
-		meetup: {},
+		gig: {},
 		attendees: [],
 		rsvp: {
 			exists: false,
@@ -20,20 +20,20 @@ exports = module.exports = function(req, res) {
 	async.series([
 
 		function(next) {
-			keystone.list('Meetup').model.findById(meetupId, function(err, meetup) {
+			keystone.list('Gig').model.findById(gigId, function(err, gig) {
 				if (err) {
-					console.log('Error finding meetup: ', err)
+					console.log('Error finding gig: ', err)
 				}
-				rtn.meetup = meetup;
+				rtn.gig = gig;
 				return next();
 			});
 		},
 
 		function(next) {
-			if (!rtn.meetup || !req.user) return next();
+			if (!rtn.gig || !req.user) return next();
 			keystone.list('RSVP').model.findOne()
 				.where('who', req.user.id)
-				.where('meetup', rtn.meetup.id)
+				.where('gig', rtn.gig.id)
 				.exec(function(err, rsvp) {
 					if (err) {
 						console.log('Error finding current user RSVP', err);
@@ -47,9 +47,9 @@ exports = module.exports = function(req, res) {
 		},
 
 		function(next) {
-			if (!rtn.meetup) return next();
+			if (!rtn.gig) return next();
 			keystone.list('RSVP').model.find()
-				.where('meetup', rtn.meetup.id)
+				.where('gig', rtn.gig.id)
 				.where('attending', true)
 				.populate('who')
 				.exec(function(err, results) {

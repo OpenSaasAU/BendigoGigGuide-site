@@ -1,7 +1,7 @@
 var keystone = require('keystone'),
 	moment = require('moment')
 
-var Meetup = keystone.list('Meetup'),
+var Gig = keystone.list('Gig'),
 	Post = keystone.list('Post'),
 	RSVP = keystone.list('RSVP');
 
@@ -11,35 +11,35 @@ exports = module.exports = function(req, res) {
 		locals = res.locals;
 	
 	locals.section = 'home';
-	locals.meetup = {};
+	locals.gig = {};
 	locals.page.title = 'Welcome to SydJS';
 	
 	locals.rsvpStatus = {};
 
 	locals.user = req.user;
 	
-	// Load the first, NEXT meetup
+	// Load the first, NEXT gig
 	
 	view.on('init', function(next) {
-		Meetup.model.findOne()
+		Gig.model.findOne()
 			.where('state', 'active')
 			.sort('-startDate')
-			.exec(function(err, activeMeetup) {
-				locals.activeMeetup = activeMeetup;
+			.exec(function(err, activeGig) {
+				locals.activeGig = activeGig;
 				next();
 			});
 			
 	});
 	
 	
-	// Load the first, PAST meetup
+	// Load the first, PAST gig
 	
 	view.on('init', function(next) {
-		Meetup.model.findOne()
+		Gig.model.findOne()
 			.where('state', 'past')
 			.sort('-startDate')
-			.exec(function(err, pastMeetup) {
-				locals.pastMeetup = pastMeetup;
+			.exec(function(err, pastGig) {
+				locals.pastGig = pastGig;
 				next();
 			});
 			
@@ -50,11 +50,11 @@ exports = module.exports = function(req, res) {
 	
 	view.on('init', function(next) {
 
-		if (!req.user || !locals.activeMeetup) return next();
+		if (!req.user || !locals.activeGig) return next();
 		
 		RSVP.model.findOne()
 			.where('who', req.user._id)
-			.where('meetup', locals.activeMeetup)
+			.where('gig', locals.activeGig)
 			.exec(function(err, rsvp) {
 				locals.rsvpStatus = {
 					rsvped: rsvp ? true : false,
@@ -69,9 +69,9 @@ exports = module.exports = function(req, res) {
 	
 	view.on('render', function(next) {
 		
-		locals.meetup = locals.activeMeetup || locals.pastMeetup;
-		if (locals.meetup) {
-			locals.meetup.populateRelated('talks[who] rsvps[who]', next);
+		locals.gig = locals.activeGig || locals.pastGig;
+		if (locals.gig) {
+			locals.gig.populateRelated('talks[who] rsvps[who]', next);
 		} else {
 			next();
 		}

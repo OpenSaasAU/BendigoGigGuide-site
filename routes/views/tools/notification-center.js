@@ -1,7 +1,7 @@
 var keystone = require('keystone'),
 	async = require('async');
 
-var Meetup = keystone.list('Meetup'),
+var Gig = keystone.list('Gig'),
 	User = keystone.list('User');
 
 exports = module.exports = function(req, res) {
@@ -10,7 +10,7 @@ exports = module.exports = function(req, res) {
 		locals = res.locals;
 	
 	locals.section = 'tools';
-	locals.nextMeetup = false;
+	locals.nextGig = false;
 
 
 	// Keep it secret, keep it safe
@@ -24,26 +24,26 @@ exports = module.exports = function(req, res) {
 
 	// Get all subscribers
 	
-	view.query('subscribers', User.model.find().where('notifications.meetups', true));
+	view.query('subscribers', User.model.find().where('notifications.gigs', true));
 
 	
-	// Get the next meetup
+	// Get the next gig
 
 	view.on('init', function(next) {
-		Meetup.model.findOne()
+		Gig.model.findOne()
 			.where('state', 'active')
 			.sort('-startDate')
-			.exec(function(err, meetup) {
+			.exec(function(err, gig) {
 			
 				if (err) {
-					console.error("===== Error loading next meetup =====");
+					console.error("===== Error loading next gig =====");
 					console.error(err);
 					return next();
-				} else if (!meetup) {
-					req.flash('warning', 'There isn\'t a "next" meetup at the moment' );
+				} else if (!gig) {
+					req.flash('warning', 'There isn\'t a "next" gig at the moment' );
 					return next();
 				} else {
-					locals.nextMeetup = meetup;
+					locals.nextGig = gig;
 					next();
 				}
 
@@ -51,20 +51,20 @@ exports = module.exports = function(req, res) {
 	});
 
 	
-	// Notify next meetup attendees
+	// Notify next gig attendees
 
 	view.on('post', { action: 'notify.attendee' }, function(next) {
-		if (!locals.nextMeetup) {
-			req.flash('warning', 'There isn\'t a "next" meetup at the moment' );
+		if (!locals.nextGig) {
+			req.flash('warning', 'There isn\'t a "next" gig at the moment' );
 			return next();
 		} else {
-			locals.nextMeetup.notifyAttendees(req, res, function(err) {
+			locals.nextGig.notifyAttendees(req, res, function(err) {
 				if (err) {
 					req.flash('error', 'There was an error sending the notifications, please check the logs for more info.');
-					console.error("===== Failed to send meetup notification emails =====");
+					console.error("===== Failed to send gig notification emails =====");
 					console.error(err);
 				} else {
-					req.flash('success', 'Notification sent to ' + keystone.utils.plural(locals.nextMeetup.rsvps.length, '* attendee'));
+					req.flash('success', 'Notification sent to ' + keystone.utils.plural(locals.nextGig.rsvps.length, '* attendee'));
 				}
 				next();
 			});
@@ -109,8 +109,8 @@ exports = module.exports = function(req, res) {
 	// Populate the RSVPs for counting
 
 	view.on('render', function(next) {
-		if (locals.nextMeetup) {
-			locals.nextMeetup.populateRelated('rsvps', next);
+		if (locals.nextGig) {
+			locals.nextGig.populateRelated('rsvps', next);
 		} else {
 			next();
 		}

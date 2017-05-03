@@ -9,7 +9,7 @@ exports = module.exports = function(req, res) {
 		if (err || !user) return res.apiResponse({ success: false });
 		RSVP.model.findOne()
 			.where('who', user)
-			.where('meetup', req.body.meetup)
+			.where('gig', req.body.meetup)
 			.exec(function(err, rsvp) {
 			
 				if (rsvp) {

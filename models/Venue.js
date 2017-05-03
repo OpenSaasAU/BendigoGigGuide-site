@@ -2,16 +2,16 @@ var keystone = require('keystone');
 var Types = keystone.Field.Types;
 
 /**
- * Organisations Model
+ * Venues Model
  * ===================
  */
 
-var Organisation = new keystone.List('Organisation', {
+var Venue = new keystone.List('Venue', {
 	track: true,
 	autokey: { path: 'key', from: 'name', unique: true }
 });
 
-Organisation.add({
+Venue.add({
 	name: { type: String, index: true },
 	logo: { type: Types.CloudinaryImage },
 	website: Types.Url,
@@ -26,7 +26,7 @@ Organisation.add({
  * =============
  */
 
-Organisation.relationship({ ref: 'User', refPath: 'organisation', path: 'members' });
+Venue.relationship({ ref: 'User', refPath: 'venue', path: 'members' });
 
 
 /**
@@ -34,5 +34,5 @@ Organisation.relationship({ ref: 'User', refPath: 'organisation', path: 'members
  * ============
  */
 
-Organisation.defaultColumns = 'name, website, isHiring';
-Organisation.register();
+Venue.defaultColumns = 'name, website, isHiring';
+Venue.register();

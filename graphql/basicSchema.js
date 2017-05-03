@@ -13,47 +13,47 @@ import {
 var keystoneTypes = require('./keystoneTypes');
 
 var keystone = require('keystone');
-var Meetup = keystone.list('Meetup');
-var Talk = keystone.list('Talk');
+var Gig = keystone.list('Gig');
+var Artist = keystone.list('Artist');
 var User = keystone.list('User');
 var RSVP = keystone.list('RSVP');
-var Organisation = keystone.list('Organisation');
+var Venue = keystone.list('Venue');
 
-function getMeetup (id) {
+function getGig (id) {
 	if (id === 'next') {
-		return Meetup.model.findOne().sort('-startDate')
+		return Gig.model.findOne().sort('-startDate')
 			.where('state', 'active').exec();
 	} else if (id === 'last') {
-		return Meetup.model.findOne().sort('-startDate')
+		return Gig.model.findOne().sort('-startDate')
 			.where('state', 'past').exec();
 	} else {
-		return Meetup.model.findById(id).exec();
+		return Gig.model.findById(id).exec();
 	}
 }
 
-var meetupStateEnum = new GraphQLEnumType({
-	name: 'MeetupState',
-	description: 'The state of the meetup',
+var gigStateEnum = new GraphQLEnumType({
+	name: 'GigState',
+	description: 'The state of the gig',
 	values: {
-		draft: { description: "No published date, it's a draft meetup" },
-		scheduled: { description: "Publish date is before today, it's a scheduled meetup" },
-		active: { description: "Publish date is after today, it's an active meetup" },
-		past: { description: "Meetup date plus one day is after today, it's a past meetup" },
+		draft: { description: "No published date, it's a draft gig" },
+		scheduled: { description: "Publish date is before today, it's a scheduled gig" },
+		active: { description: "Publish date is after today, it's an active gig" },
+		past: { description: "Gig date plus one day is after today, it's a past gig" },
 	},
 });
 
-var meetupType = new GraphQLObjectType({
-	name: 'Meetup',
+var gigType = new GraphQLObjectType({
+	name: 'Gig',
 	fields: () => ({
 		id: { type: new GraphQLNonNull(GraphQLID) },
 		name: {
 			type: new GraphQLNonNull(GraphQLString),
-			description: 'The name of the meetup.',
+			description: 'The name of the gig.',
 		},
-		publishedDate: keystoneTypes.date(Meetup.fields.publishedDate),
-		state: { type: new GraphQLNonNull(meetupStateEnum) },
-		startDate: keystoneTypes.datetime(Meetup.fields.startDate),
-		endDate: keystoneTypes.datetime(Meetup.fields.endDate),
+		publishedDate: keystoneTypes.date(Gig.fields.publishedDate),
+		state: { type: new GraphQLNonNull(gigStateEnum) },
+		startDate: keystoneTypes.datetime(Gig.fields.startDate),
+		endDate: keystoneTypes.datetime(Gig.fields.endDate),
 		place: { type: GraphQLString },
 		map: { type: GraphQLString },
 		description: { type: GraphQLString },
@@ -62,40 +62,40 @@ var meetupType = new GraphQLObjectType({
 		url: { type: GraphQLString },
 		remainingRSVPs: { type: new GraphQLNonNull(GraphQLInt) },
 		rsvpsAvailable: { type: new GraphQLNonNull(GraphQLBoolean) },
-		talks: {
-			type: new GraphQLList(talkType),
+		artists: {
+			type: new GraphQLList(artistType),
 			resolve: (source, args) =>
-				Talk.model.find().where('meetup', source.id).exec(),
+				Artist.model.find().where('gig', source.id).exec(),
 		},
 		rsvps: {
 			type: new GraphQLList(rsvpType),
 			resolve: (source, args) =>
-				RSVP.model.find().where('meetup', source.id).exec(),
+				RSVP.model.find().where('gig', source.id).exec(),
 		},
 	}),
 });
 
-var talkType = new GraphQLObjectType({
-	name: 'Talk',
+var artistType = new GraphQLObjectType({
+	name: 'Artist',
 	fields: () => ({
 		id: { type: new GraphQLNonNull(GraphQLID) },
 		name: {
 			type: new GraphQLNonNull(GraphQLString),
-			description: 'The title of the talk.',
+			description: 'The title of the artist.',
 		},
-		isLightningTalk: {
+		isLightningArtist: {
 			type: GraphQLBoolean,
-			description: 'Whether the talk is a Lightning talk',
+			description: 'Whether the artist is a Lightning artist',
 		},
-		meetup: {
-			type: meetupType,
-			description: 'The Meetup the talk is scheduled for',
+		gig: {
+			type: gigType,
+			description: 'The Gig the artist is scheduled for',
 			resolve: (source, args, info) =>
-				Meetup.model.findById(source.meetup).exec(),
+				Gig.model.findById(source.gig).exec(),
 		},
 		who: {
 			type: new GraphQLList(userType),
-			description: 'A list of at least one User running the talk',
+			description: 'A list of at least one User running the artist',
 			resolve: (source, args, info) =>
 				User.model.find().where('_id').in(source.who).exec(),
 		},
@@ -129,10 +129,10 @@ var userType = new GraphQLObjectType({
 		// 		gravatarUrl: source._.email.gravatarUrl,
 		// 	}),
 		// },
-		talks: {
-			type: new GraphQLList(talkType),
+		artists: {
+			type: new GraphQLList(artistType),
 			resolve: (source, args) =>
-				Talk.model.find().where('who', source.id).exec(),
+				Artist.model.find().where('who', source.id).exec(),
 		},
 		rsvps: {
 			type: new GraphQLList(rsvpType),
@@ -146,22 +146,22 @@ var rsvpType = new GraphQLObjectType({
 	name: 'RSVP',
 	fields: {
 		id: { type: new GraphQLNonNull(GraphQLID) },
-		meetup: {
-			type: meetupType,
-			resolve: (source) => Meetup.model.findById(source.meetup).exec(),
+		gig: {
+			type: gigType,
+			resolve: (source) => Gig.model.findById(source.gig).exec(),
 		},
 		who: {
 			type: userType,
 			resolve: (source) => User.model.findById(source.who).exec(),
 		},
 		attending: { type: GraphQLBoolean },
-		createdAt: keystoneTypes.datetime(Meetup.fields.createdAt),
-		changedAt: keystoneTypes.datetime(Meetup.fields.changedAt),
+		createdAt: keystoneTypes.datetime(Gig.fields.createdAt),
+		changedAt: keystoneTypes.datetime(Gig.fields.changedAt),
 	},
 });
 
-var organisationType = new GraphQLObjectType({
-	name: 'Organisation',
+var venueType = new GraphQLObjectType({
+	name: 'Venue',
 	fields: () => ({
 		id: { type: new GraphQLNonNull(GraphQLID) },
 		name: { type: GraphQLString },
@@ -173,7 +173,7 @@ var organisationType = new GraphQLObjectType({
 		members: {
 			type: new GraphQLList(userType),
 			resolve: (source, args) =>
-				User.model.find().where('organisation', source.id).exec(),
+				User.model.find().where('venue', source.id).exec(),
 		},
 	}),
 });
@@ -181,45 +181,45 @@ var organisationType = new GraphQLObjectType({
 var queryRootType = new GraphQLObjectType({
 	name: 'Query',
 	fields: {
-		meetups: {
-			type: new GraphQLList(meetupType),
+		gigs: {
+			type: new GraphQLList(gigType),
 			resolve: (_, args) =>
-				Meetup.model.find().exec(),
+				Gig.model.find().exec(),
 		},
-		meetup: {
-			type: meetupType,
+		gig: {
+			type: gigType,
 			args: {
 				id: {
-					description: 'id of the meetup, can be "next" or "last"',
+					description: 'id of the gig, can be "next" or "last"',
 					type: new GraphQLNonNull(GraphQLID),
 				},
 			},
-			resolve: (_, args) => getMeetup(args.id),
+			resolve: (_, args) => getGig(args.id),
 		},
-		talks: {
-			type: new GraphQLList(talkType),
+		artists: {
+			type: new GraphQLList(artistType),
 			resolve: (_, args) =>
-				Talk.model.find().exec(),
+				Artist.model.find().exec(),
 		},
-		talk: {
-			type: talkType,
+		artist: {
+			type: artistType,
 			args: {
 				id: {
-					description: 'id of the talk',
+					description: 'id of the artist',
 					type: new GraphQLNonNull(GraphQLID),
 				},
 			},
-			resolve: (_, args) => Talk.model.findById(args.id).exec(),
+			resolve: (_, args) => Artist.model.findById(args.id).exec(),
 		},
-		organisation: {
-			type: organisationType,
+		venue: {
+			type: venueType,
 			args: {
 				id: {
-					description: 'id of the organisation',
+					description: 'id of the venue',
 					type: new GraphQLNonNull(GraphQLID),
 				},
 			},
-			resolve: (_, args) => Organisation.model.findById(args.id).exec(),
+			resolve: (_, args) => Venue.model.findById(args.id).exec(),
 		},
 		users: {
 			type: new GraphQLList(userType),

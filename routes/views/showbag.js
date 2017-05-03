@@ -2,7 +2,7 @@ var keystone = require('keystone'),
 	_ = require('lodash');
 
 var User = keystone.list('User'),
-	Organisation = keystone.list('Organisation');
+	Venue = keystone.list('Venue');
 
 exports = module.exports = function(req, res) {
 	
@@ -12,13 +12,13 @@ exports = module.exports = function(req, res) {
 	locals.section = 'showbag';
 	locals.page.title = 'SydJS Showbag';
 
-	Organisation.model.findOne().where('key', 'thinkmill').exec(function(err, thinkmill) {
+	Venue.model.findOne().where('key', 'thinkmill').exec(function(err, thinkmill) {
 		if (err || !thinkmill) {
 			return view.render('errors/500');
 		}
 		locals.thinkmill = thinkmill;
 
-		view.query('members', User.model.find().where({organisation: thinkmill.id}));
+		view.query('members', User.model.find().where({venue: thinkmill.id}));
 		view.render('site/showbag');
 
 	});

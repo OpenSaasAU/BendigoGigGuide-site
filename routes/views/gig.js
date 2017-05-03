@@ -1,6 +1,6 @@
 var keystone = require('keystone'),
 	moment = require('moment'),
-	Meetup = keystone.list('Meetup'),
+	Gig = keystone.list('Gig'),
 	RSVP = keystone.list('RSVP');
 
 exports = module.exports = function(req, res) {
@@ -8,24 +8,24 @@ exports = module.exports = function(req, res) {
 	var view = new keystone.View(req, res),
 		locals = res.locals;
 	
-	locals.section = 'meetups';
-	locals.page.title = 'Meetups - SydJS';
+	locals.section = 'gigs';
+	locals.page.title = 'Gigs - SydJS';
 	
 	locals.rsvpStatus = {};
 	
 	
-	// LOAD the Meetup
+	// LOAD the Gig
 	
 	view.on('init', function(next) {
-		Meetup.model.findOne()
-			.where('key', req.params.meetup)
-			.exec(function(err, meetup) {
+		Gig.model.findOne()
+			.where('key', req.params.gig)
+			.exec(function(err, gig) {
 				
 				if (err) return res.err(err);
-				if (!meetup) return res.notfound('Post not found');
+				if (!gig) return res.notfound('Post not found');
 				
-				locals.meetup = meetup;
-				locals.meetup.populateRelated('talks[who] rsvps[who]', next);
+				locals.gig = gig;
+				locals.gig.populateRelated('talks[who] rsvps[who]', next);
 				
 			});
 	});
@@ -35,11 +35,11 @@ exports = module.exports = function(req, res) {
 	
 	view.on('init', function(next) {
 	
-		if (!req.user || !locals.meetup) return next();
+		if (!req.user || !locals.gig) return next();
 		
 		RSVP.model.findOne()
 			.where('who', req.user._id)
-			.where('meetup', locals.meetup)
+			.where('gig', locals.gig)
 			.exec(function(err, rsvp) {
 				locals.rsvpStatus = {
 					rsvped: rsvp ? true : false,
@@ -51,6 +51,6 @@ exports = module.exports = function(req, res) {
 	});
 	
 	
-	view.render('site/meetup');
+	view.render('site/gig');
 	
 }

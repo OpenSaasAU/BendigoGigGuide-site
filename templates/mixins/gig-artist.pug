@@ -1,0 +1,34 @@
+mixin gig-artist(artist)
+	li.row.artist
+		.col-xs-3.col-sm-2
+			.artist__speakers
+				if artist.who.length
+					each speaker, i in artist.who
+						img(src=speaker.photo.exists ? speaker._.photo.thumbnail(320,320) : speaker.avatarUrl || '/images/avatar.png', width=160, height=160, alt=speaker.name.full, class=artist.who.length > 1 ? 'artist__photo--mini' : null).artist__photo
+				else
+					img(src='/images/avatar.png', width=160, height=160, alt='There is no speaker...').artist__photo
+			//- if artist.who.length
+				.artisters
+					for photo in artist.who
+						img(src='http://fillmurray.com/100/100').img-circle
+		.col-xs-9.col-sm-10
+			.artist-summary
+				h4.title #{artist.name} 
+					if artist.slides
+						a(href=artist.slides, target='_blank', title='View the slides from this artist').text-muted.text-thin
+							|  (view&nbsp;slides)
+				if artist.who.length
+					p.subtitle.mb-1 by 
+						each speaker, i in artist.who
+							if i
+								| , 
+							if speaker.isPublic 
+								a(href=speaker.url)=speaker.name.full
+							else
+								=speaker.name.full
+				if artist.description
+					!=artist.description
+				if artist.link
+					a(href=artist.link, target='_blank', title='View the website for this artist')
+						| #{artist.link} 
+						span.entypo.entypo-chevron-small-right

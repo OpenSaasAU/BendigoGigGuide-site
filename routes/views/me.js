@@ -2,7 +2,7 @@ var keystone = require('keystone'),
 	_ = require('lodash'),
 	moment = require('moment');
 
-var Meetup = keystone.list('Meetup'),
+var Gig = keystone.list('Gig'),
 	RSVP = keystone.list('RSVP');
 
 exports = module.exports = function(req, res) {
@@ -13,8 +13,8 @@ exports = module.exports = function(req, res) {
 	locals.section = 'me';
 	locals.page.title = 'Settings - SydJS';
 	
-	view.query('nextMeetup',
-		Meetup.model.findOne()
+	view.query('nextGig',
+		Gig.model.findOne()
 			.where('state', 'active')
 			.sort('startDate')
 	, 'talks[who]');
@@ -23,14 +23,14 @@ exports = module.exports = function(req, res) {
 		RSVP.model.find()
 			.where('who', req.user)
 			.where('attending', true)
-			.populate('meetup')
+			.populate('gig')
 			.sort('-createdAt')
 	);
 	
 	view.on('post', { action: 'profile.details' }, function(next) {
 	
 		req.user.getUpdateHandler(req).process(req.body, {
-			fields: 'name, email, notifications.meetups, notifications.posts,' + 
+			fields: 'name, email, notifications.gigs, notifications.posts,' + 
 			'website, isPublic, bio, photo,' + 
 			'mentoring.available, mentoring.free, mentoring.paid, mentoring.swap, mentoring.have, mentoring.want',
 			flashErrors: true

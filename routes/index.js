@@ -79,12 +79,12 @@ exports = module.exports = function (app) {
 
 	// Website
 	app.get('/', routes.views.index);
-	app.get('/meetups', routes.views.meetups);
-	app.get('/meetups/:meetup', routes.views.meetup);
+	app.get('/gigs', routes.views.gigs);
+	app.get('/gigs/:gig', routes.views.gig);
 	app.get('/members', routes.views.members);
 	app.get('/members/mentors', routes.views.mentors);
 	app.get('/member/:member', routes.views.member);
-	app.get('/organisations', routes.views.organisations);
+	app.get('/venues', routes.views.venues);
 	app.get('/links', routes.views.links);
 	app.get('/links/:tag?', routes.views.links);
 	app.all('/links/link/:link', routes.views.link);
@@ -118,9 +118,9 @@ exports = module.exports = function (app) {
 
 	// API
 	app.all('/api*', keystone.middleware.api);
-	app.all('/api/me/meetup', routes.api.me.meetup);
+	app.all('/api/me/gig', routes.api.me.gig);
 	app.all('/api/stats', routes.api.stats);
-	app.all('/api/meetup/:id', routes.api.meetup);
+	app.all('/api/gig/:id', routes.api.gig);
 
 	// API - App
 	app.all('/api/app/status', routes.api.app.status);

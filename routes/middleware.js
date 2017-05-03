@@ -14,9 +14,8 @@ exports.initLocals = function(req, res, next) {
 	locals.navLinks = [
 		{ label: 'Home',			key: 'home',		href: '/' },
 		{ label: 'Code of Conduct',	key: 'about',		href: '/about#CoC' },
-		{ label: 'Meetups',			key: 'meetups',		href: '/meetups' },
-		{ label: 'Members',			key: 'members',		href: '/members' },
-		{ label: 'Showbag',			key: 'showbag',		href: '/showbag' }
+		{ label: 'Gigs',			key: 'gigs',		href: '/gigs' },
+		{ label: 'Members',			key: 'members',		href: '/members' }
 	];
 
 	locals.user = req.user;
@@ -52,7 +51,7 @@ exports.initLocals = function(req, res, next) {
 */
 
 exports.loadSponsors = function(req, res, next) {
-	keystone.list('Organisation').model.find().sort('name').exec(function(err, sponsors) {
+	keystone.list('Venue').model.find().sort('name').exec(function(err, sponsors) {
 		if (err) return next(err);
 		req.sponsors = sponsors;
 		res.locals.sponsors = sponsors;

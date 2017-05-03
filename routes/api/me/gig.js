@@ -4,11 +4,11 @@ var keystone = require('keystone'),
 exports = module.exports = function(req, res) {
 
 	console.log("User ID is", req.user._id);
-	console.log("The meetup is", req.body.data.meetup)
+	console.log("The gig is", req.body.data.gig)
 	
 	RSVP.model.findOne()
 		.where('who', req.user._id)
-		.where('meetup', req.body.data.meetup)
+		.where('gig', req.body.data.gig)
 		.exec(function(err, rsvp) {
 		
 			if (req.body.statusOnly) {
@@ -35,7 +35,7 @@ exports = module.exports = function(req, res) {
 				} else {
 					console.log("==========saving to rsvp model=============")
 					new RSVP.model({
-						meetup: req.body.data.meetup,
+						gig: req.body.data.gig,
 						who: req.user,
 						attending: req.body.data.attending
 					}).save(function(err) {

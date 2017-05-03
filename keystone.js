@@ -81,8 +81,8 @@ keystone.set('email locals', {
 });
 
 keystone.set('nav', {
-	'meetups': ['meetups', 'talks', 'rsvps'],
-	'members': ['users', 'organisations'],
+	'gigs': ['gigs', 'artists', 'rsvps'],
+	'members': ['users', 'venues'],
 	'posts': ['posts', 'post-categories', 'post-comments'],
 	'links': ['links', 'link-tags', 'link-comments']
 });

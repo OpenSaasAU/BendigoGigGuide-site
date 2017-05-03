@@ -1,0 +1,63 @@
+include gig-artist
+
+mixin gig(gig)
+
+	- var today = new Date();
+
+	.tile.ph-1.pv-1
+		.gig-calendar.calendar.hidden-xs.hidden-sm(class=gig.state == 'past' ? 'calendar--past' : null)
+			.calendar__header=gig._.startDate.format('MMM')
+			.calendar__body
+				.calendar__date=gig._.startDate.format('DD')
+				.calendar__year=gig._.startDate.format('YYYY')
+		.gig-content
+			h2.mv-5= gig.name
+			h5.mb-1=gig._.startDate.format('dddd D MMM YYYY')
+				|  from #{gig._.startDate.format('h:mma')} - #{gig._.endDate.format('h:mma')}
+			if gig.description
+				p!= gig.description
+			if gig.artists.length
+				hr.mv-2
+				ul.gig-artists
+					each artist in gig.artists
+						+gig-artist(artist)
+
+		if gig.state == 'active'
+			hr.mv-2
+			.gig-cta
+				if user
+					if gig.rsvpsAvailable
+						h4.hero-button-title
+							if !rsvpStatus.rsvped && rsvpStatus.attending
+								span RSVP Confirmed!
+							else
+								span Are you coming?&nbsp;
+								span.text-thin (#{plural(gig.remainingRSVPs, '* spot left', '* spots left')})
+
+						include ../includes/attendance-toggle
+					else
+						.alert.alert-success.mb-0.text-center No more tickets&hellip;
+
+				else
+					#next-gig(data-id=gig.id)
+						if gig.rsvpsAvailable
+							a(href='/join', data-from=page.path).btn.btn-primary.btn-lg.btn-block.js-auth-trigger RSVP Now 
+								span.text-thin (#{plural(gig.remainingRSVPs, '* spot left', '* spots left')})
+						else
+							.alert.alert-success.mb-0.text-center No more tickets&hellip;
+
+		else if gig.totalRSVPs
+			hr
+			.text-center
+				.h1.text-muted.mb-0= gig.totalRSVPs
+				.lead.text-muted people #{gig.state == 'active' ? "are attending" : "attended"} this gig
+			if gig.state == 'past'
+				ul.list-unstyled.list-inline.text-center
+					for rsvp in gig.rsvps
+						if rsvp.who
+							- var attendee = rsvp.who;
+							if attendee.isPublic
+								li: a(href=attendee.url, title=attendee.name.full)
+									img(src=attendee.photo.exists ? attendee._.photo.thumbnail(80,80) : attendee.avatarUrl || '/images/avatar.png', width=40, height=40, alt=attendee.name.full).img-circle
+							else
+								li(title=attendee.name.full): img(src=attendee.photo.exists ? attendee._.photo.thumbnail(80,80) : attendee.avatarUrl || '/images/avatar.png', width=40, height=40, alt=attendee.name.full).img-circle

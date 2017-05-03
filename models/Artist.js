@@ -3,27 +3,27 @@ var keystone = require('keystone');
 var Types = keystone.Field.Types;
 
 /**
- * Talks Model
+ * Artists Model
  * ===========
  */
 
-var Talk = new keystone.List('Talk', {
+var Artist = new keystone.List('Artist', {
 	track: true,
 	sortable: true,
-	sortContext: 'Meetup:talks'
+	sortContext: 'Gig:Artists'
 });
 
-Talk.add({
+Artist.add({
 	name: { type: String, required: true, initial: true },
-	isLightningTalk: { type: Boolean },
-	meetup: { type: Types.Relationship, ref: 'Meetup', required: true, initial: true, index: true },
+	isLightningArtist: { type: Boolean },
+	gig: { type: Types.Relationship, ref: 'Gig', required: true, initial: true, index: true },
 	who: { type: Types.Relationship, ref: 'User', many: true, index: true },
 	description: { type: Types.Html, wysiwyg: true },
 	slides: { type: Types.Url },
 	link: { type: Types.Url }
 });
 
-Talk.schema.set('toJSON', {
+Artist.schema.set('toJSON', {
 	virtuals: true,
 	transform: function(doc, rtn, options) {
 		rtn = _.pick(rtn, '_id', 'name', 'place', 'map', 'description', 'slides', 'link');
@@ -45,5 +45,5 @@ Talk.schema.set('toJSON', {
  * ============
  */
 
-Talk.defaultColumns = 'name, meetup|20%, who|20%';
-Talk.register();
+Artist.defaultColumns = 'name, gig|20%, who|20%';
+Artist.register();
