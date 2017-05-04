@@ -14,9 +14,11 @@ var Venue = new keystone.List('Venue', {
 Venue.add({
 	name: { type: String, index: true },
 	logo: { type: Types.CloudinaryImage },
+    state: { type: Types.Select, options: 'draft, scheduled, active, past, rejected, facebookImport', noedit: true },
 	website: Types.Url,
 	isHiring: Boolean,
 	description: { type: Types.Markdown },
+    facebookId: { type: Types.Number, unique: true },
 	location: Types.Location
 });
 
@@ -27,6 +29,8 @@ Venue.add({
  */
 
 Venue.relationship({ ref: 'User', refPath: 'venue', path: 'members' });
+Venue.relationship({ ref: 'Gig', refPath: 'venue', path: 'gigs' });
+
 
 
 /**

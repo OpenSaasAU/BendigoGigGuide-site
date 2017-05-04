@@ -40,7 +40,7 @@ keystone.init({
 	'session store': 'mongo',
 	'auth': true,
 	'user model': 'User',
-	'cookie secret': process.env.COOKIE_SECRET || 'sydjs',
+	'cookie secret': process.env.COOKIE_SECRET || 'BenGG',
 
 	'mandrill api key': process.env.MANDRILL_KEY,
 
@@ -75,7 +75,7 @@ keystone.set('email locals', {
 	utils: keystone.utils,
 	host: (function() {
 		if (keystone.get('env') === 'staging') return 'http://sydjs-beta.herokuapp.com';
-		if (keystone.get('env') === 'production') return 'http://www.sydjs.com';
+		if (keystone.get('env') === 'production') return 'http://www.bendigogigguide.com.au';
 		return (keystone.get('host') || 'http://localhost:') + (keystone.get('port') || '3000');
 	})()
 });

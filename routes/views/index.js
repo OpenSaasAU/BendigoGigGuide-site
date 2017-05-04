@@ -71,7 +71,7 @@ exports = module.exports = function(req, res) {
 		
 		locals.gig = locals.activeGig || locals.pastGig;
 		if (locals.gig) {
-			locals.gig.populateRelated('talks[who] rsvps[who]', next);
+			locals.gig.populateRelated('artists[who] rsvps[who]', next);
 		} else {
 			next();
 		}

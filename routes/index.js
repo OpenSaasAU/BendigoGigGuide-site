@@ -115,6 +115,7 @@ exports = module.exports = function (app) {
 
 	// Tools
 	app.all('/notification-center', routes.views.tools['notification-center']);
+    app.all('/facebook-sync', middleware.requireUser, routes.views.tools['facebookEventSync']);
 
 	// API
 	app.all('/api*', keystone.middleware.api);

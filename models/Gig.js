@@ -17,21 +17,23 @@ Gig.add({
 	name: { type: String, required: true, initial: true },
 	publishedDate: { type: Types.Date, index: true },
 
-	state: { type: Types.Select, options: 'draft, scheduled, active, past', noedit: true },
+	state: { type: Types.Select, options: 'draft, scheduled, active, past, rejected, facebookImport', noedit: true },
+	facebookId: { type: Types.Number, unique: true },
+	fbCategory: { type: String },
 
 	startDate: { type: Types.Datetime, required: true, initial: true, index: true, width: 'short', note: 'e.g. 2014-07-15 / 6:00pm' },
-	endDate: { type: Types.Datetime, required: true, initial: true, index: true, width: 'short', note: 'e.g. 2014-07-15 / 9:00pm' },
+	endDate: { type: Types.Datetime, required: false, initial: true, index: true, width: 'short', note: 'e.g. 2014-07-15 / 9:00pm' },
 
-	place: { type: String, required: false, initial: true, width: 'medium', default: 'The Old Church on the Hill', note: 'Cnr Harkness and Russell St, Quarry Hill' },
-	map: { type: String, required: false, initial: true, width: 'medium', default: 'The Old Church on the Hill', note: 'Cnr Harkness and Russell St, Quarry Hill' },
+	place: { type: String, required: false, initial: true, width: 'medium' },
+	map: { type: String, required: false, initial: true, width: 'medium' },
 	description: { type: Types.Html, wysiwyg: true },
 
 	maxRSVPs: { type: Number, default: 300 },
 	totalRSVPs: { type: Number, noedit: true },
 
 	legacy: { type: Boolean, noedit: true, collapse: true },
-    artist: { type: Types.Relationship, ref: 'Artist', required: true, initial: true, index: true },
-    venue: { type: Types.Relationship, ref: 'Venue', required: true, initial: true, index: true },
+    artist: { type: Types.Relationship, ref: 'Artist', required: false, initial: true, index: true },
+    venue: { type: Types.Relationship, ref: 'Venue', required: false, initial: true, index: true },
 });
 
 
@@ -40,8 +42,8 @@ Gig.add({
 // Relationships
 // ------------------------------
 
-Gig.relationship({ ref: 'Artist', refPath: 'Gig', path: 'artists' });
-Gig.relationship({ ref: 'RSVP', refPath: 'Gig', path: 'rsvps' });
+Gig.relationship({ ref: 'Artist', refPath: 'who', path: 'artists' });
+Gig.relationship({ ref: 'RSVP', refPath: 'who', path: 'rsvps' });
 
 
 
@@ -71,7 +73,7 @@ Gig.schema.virtual('rsvpsAvailable').get(function() {
 Gig.schema.pre('save', function(next) {
 	var Gig = this;
 	// no published date, it's a draft Gig
-	if (!Gig.publishedDate) {
+	if (!Gig.publishedDate && Gig.state != 'facebookImport') {
 		Gig.state = 'draft';
 	}
 	// Gig date plus one day is after today, it's a past Gig
@@ -121,8 +123,8 @@ Gig.schema.methods.notifyAttendees = function(req, res, next) {
 					subject: 'New Gig: ' + Gig.name,
 					to: attendee.email,
 					from: {
-						name: 'SydJS',
-						email: 'hello@sydjs.com'
+						name: 'Bendigo Gig Guide',
+						email: 'hello@bendigogigguide.com.au'
 					}
 				}, next);
 			});

@@ -9,7 +9,7 @@ exports = module.exports = function(req, res) {
 		locals = res.locals;
 	
 	locals.section = 'gigs';
-	locals.page.title = 'Gigs - SydJS';
+	locals.page.title = 'Gigs - Bendigo Gig Guide';
 	
 	locals.rsvpStatus = {};
 	

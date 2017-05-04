@@ -6,7 +6,7 @@ var RSVPStore = new Store();
 
 var loaded = false;
 var busy = false;
-var meetup = {};
+var gig = {};
 var rsvp = {};
 var attendees = [];
 
@@ -19,8 +19,8 @@ function cancelRefresh() {
 
 RSVPStore.extend({
 
-	getMeetup: function() {
-		return meetup;
+	getGig: function() {
+		return gig;
 	},
 
 	getRSVP: function() {
@@ -37,9 +37,9 @@ RSVPStore.extend({
 		busy = true;
 		RSVPStore.notifyChange();
 		request
-			.post('/api/me/meetup')
+			.post('/api/me/gig')
 			.send({ data: {
-				meetup: SydJS.currentMeetupId,
+				gig: SydJS.currentGigId,
 				attending: attending
 			}})
 			.end(function(err, res) {
@@ -47,7 +47,7 @@ RSVPStore.extend({
 					console.log('Error with the AJAX request: ', err)
 					return;
 				}
-				RSVPStore.getMeetupData();
+				RSVPStore.getGigData();
 			});
 	},
 
@@ -59,14 +59,14 @@ RSVPStore.extend({
 		return busy;
 	},
 
-	getMeetupData: function(callback) {
+	getGigData: function(callback) {
 		// ensure any scheduled refresh is stopped,
 		// in case this was called directly
 		cancelRefresh();
 		// request the update from the API
 		busy = true;
 		request
-			.get('/api/meetup/' + SydJS.currentMeetupId)
+			.get('/api/gig/' + SydJS.currentGigId)
 			.end(function(err, res) {
 				if (err) {
 					console.log('Error with the AJAX request: ', err)
@@ -74,21 +74,21 @@ RSVPStore.extend({
 				busy = false;
 				if (!err && res.body) {
 					loaded = true;
-					meetup = res.body.meetup;
+					gig = res.body.gig;
 					rsvp = res.body.rsvp;
 					attendees = res.body.attendees;
 					RSVPStore.notifyChange();
 				}
-				RSVPStore.queueMeetupRefresh();
+				RSVPStore.queueGigRefresh();
 				return callback && callback(err, res.body);
 			});
 	},
 
-	queueMeetupRefresh: function() {
-		refreshTimeout = setTimeout(RSVPStore.getMeetupData, REFRESH_INTERVAL);
+	queueGigRefresh: function() {
+		refreshTimeout = setTimeout(RSVPStore.getGigData, REFRESH_INTERVAL);
 	}
 
 });
 
-RSVPStore.getMeetupData();
+RSVPStore.getGigData();
 module.exports = RSVPStore;

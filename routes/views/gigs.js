@@ -10,19 +10,19 @@ exports = module.exports = function(req, res) {
 		locals = res.locals;
 	
 	locals.section = 'gigs';
-	locals.page.title = 'Gigs - SydJS';
+	locals.page.title = 'Gigs - Bendigo Gig Guide';
 	
 	view.query('upcomingGig',
 		Gig.model.findOne()
 			.where('state', 'active')
 			.sort('-startDate')
-	, 'talks[who]');
+	, 'artists[who]');
 	
 	view.query('pastGigs',
 		Gig.model.find()
 			.where('state', 'past')
 			.sort('-startDate')
-	, 'talks[who]');
+	, 'artists[who]');
 	
 	view.on('render', function(next) {
 	
