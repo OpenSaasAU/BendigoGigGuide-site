@@ -27,6 +27,8 @@ Gig.add({
 	place: { type: String, required: false, initial: true, width: 'medium' },
 	map: { type: String, required: false, initial: true, width: 'medium' },
 	description: { type: Types.Html, wysiwyg: true },
+	gigUrl: { type: Types.Url, required: false, initial: true },
+	userUpdated: { type: Types.Boolean, required: false, initial: true, default: false },
 
 	maxRSVPs: { type: Number, default: 300 },
 	totalRSVPs: { type: Number, noedit: true },

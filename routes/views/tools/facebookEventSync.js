@@ -1,14 +1,14 @@
-var eventSearch = require("facebook-events-by-location-core"), 
+const eventSearch = require("facebook-events-by-location-core"),
     request = require("request"),
     keystone = require('keystone'),
-	async = require('async');
+    async = require('async');
 
-var Gig = keystone.list('Gig'),
+const Gig = keystone.list('Gig'),
     User = keystone.list('User'),
     Venue = keystone.list('Venue'),
     Artist = keystone.list('Artist');
 
-var credentials = {
+const credentials = {
     clientID: process.env.FACEBOOK_CLIENT_ID,
     clientSecret: process.env.FACEBOOK_CLIENT_SECRET
 };
@@ -33,7 +33,7 @@ exports = module.exports = function(req, res) {
                 console.log('Facebook Access Token error:', err);
                 next(err);
             } else {
-                var jsonBody = JSON.parse(body);
+                let jsonBody = JSON.parse(body);
                 locals.fbAccessToken = jsonBody.access_token;
                 next();
             };
@@ -44,7 +44,7 @@ exports = module.exports = function(req, res) {
     // Load Facebook events
     view.on('post', { action: 'getEvents' }, function(next){
         console.log("Req Body", req.body);
-        var es = new eventSearch({
+        let es = new eventSearch({
             "lat": req.body.lat,
             "lng": req.body.lng,
             "distance": req.body.distance,
@@ -81,14 +81,15 @@ exports = module.exports = function(req, res) {
                                                         country: event.place.location.country
                                                     };
                                                 }
-                                                var newVenue = new Venue.model({
+                                                let newVenue = new Venue.model({
                                                     name: event.place.name,
                                                     location: thisVenueLocation,
                                                     state: 'facebookImport',
-                                                    facebookId: event.place.id
-                                                });
-                                                updater = newVenue.getUpdateHandler(req, res, {
-                                                    errorMessage: 'There was an error creating your new Venue:'
+                                                    facebookId: event.place.id,
+                                                    website: 'https://www.facebook.com/' + event.place.id
+                                                }),
+                                                    updater = newVenue.getUpdateHandler(req, res, {
+                                                        errorMessage: 'There was an error creating your new Venue:'
                                                 });
                                                 updater.process(event.place, {
                                                     flashErrors: true,
@@ -110,8 +111,8 @@ exports = module.exports = function(req, res) {
                                             }
                                         });
                                 }], function(thisVenueId){
-                                    var eventDescription = '<p>' + event.description + '</p>';
-                                    var newGig = new Gig.model({
+                                    let eventDescription = '<p>' + event.description + ' <br /> This event has been imported from facebook, would you like to edit this event? <a href="/join">Sign up</a> to start editing and to add new events.</a></p>';
+                                    let newGig = new Gig.model({
                                             name: event.name,
                                             facebookId: event.id,
                                             description: eventDescription,
@@ -119,6 +120,7 @@ exports = module.exports = function(req, res) {
                                             startDate: event.start_time,
                                             endDate: event.end_time,
                                             venue: thisVenueId,
+                                            gigUrl: 'https://www.facebook.com/events/' + event.id,
                                             fbCategory: event.category
                                         }),
                                         updater = newGig.getUpdateHandler(req, res, {
@@ -140,12 +142,38 @@ exports = module.exports = function(req, res) {
                                 });
                                 
                             });
-                        } else {
-                            console.log("Gig Exists in Database: ", gig.facebookId);
+                        } else if (gig.userUpdated) {
+                            console.log("Gig has been updated locally, not updating from facebook");
                             return callback();
+                        } else {
+                            request('https://graph.facebook.com/v2.9/' + rawEvent.id + '?access_token=' + locals.fbAccessToken, function (err, response, body) {
+                                event = JSON.parse(body);
+                                let updater = gig.getUpdateHandler(req, res, {
+                                    errorMessage: 'There was an error updating your new Gig:'
+                                });
+                            let eventDescription = '<p>' + event.description + ' <br /> This event has been imported from facebook, would you like to edit this event? <a href="/join">Sign up</a> to start editing and to add new events.</a></p>';
+                            let thisEvent = {
+                                name: event.name,
+                                description: eventDescription,
+                                startDate: event.start_time,
+                                endDate: event.end_time
+                            };
+                            updater.process(thisEvent, {
+                                flashErrors: true,
+                                logErrors: true,
+                                fields: 'name, description, startDate, endDate' 
+                                }, function(err) {
+                                if (err) {
+                                    locals.validationErrors = err.errors;
+                                    return callback(err);
+                                } else {
+                                    console.log('Gig updated: ', event.id)
+                                    return callback();
+                                }
+                                });
+                            });
                         }
-
-                    });
+                        })
             }, function(err){
                 if (err){
                     req.flash('error', "Events Sync Errors" + JSON.stringify(err));
@@ -162,5 +190,5 @@ exports = module.exports = function(req, res) {
         });
     });
 
-    view.render('tools/facebookEventSync')
+    view.render('tools/facebookEventSync');
 }
