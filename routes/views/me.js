@@ -11,13 +11,13 @@ exports = module.exports = function(req, res) {
 		locals = res.locals;
 	
 	locals.section = 'me';
-	locals.page.title = 'Settings - SydJS';
+	locals.page.title = 'Settings - Bendigo Gig Guide';
 	
 	view.query('nextGig',
 		Gig.model.findOne()
 			.where('state', 'active')
 			.sort('startDate')
-	, 'talks[who]');
+	, 'artists[who]');
 	
 	view.query('rsvps.history',
 		RSVP.model.find()

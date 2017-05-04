@@ -31,19 +31,19 @@ block content
 					strong.col-sm-2.control-label Notify me
 					.col-sm-10
 						.checkbox: label
-							input(type='checkbox', name='notifications.meetups' value='true' checked=user.notifications.meetups)
-							|  When there is a new meetup
+							input(type='checkbox', name='notifications.gigs' value='true' checked=user.notifications.gigs)
+							|  When there is a new gig
 						.checkbox: label
 							input(type='checkbox', name='notifications.posts' value='true' checked=user.notifications.posts)
 							|  When there is a new post
 				hr.mv-2
 				h3 Your Services
-				p.help-block.mb-2 You can authenticate yourself on the SydJS website with any of the services you connect. When connected, links to your Twitter and Github will be displayed on your profile.
+				p.help-block.mb-2 You can authenticate yourself on the Bendigo Gig Guide website with any of the services you connect. When connected, links to your Twitter will be displayed on your profile.
 				
 				
 				//- Unconfigured Services
 				
-				if !user.services.github.isConfigured
+				//- if !user.services.github.isConfigured
 					.form-group
 						label.col-sm-2.control-label Github
 						.col-sm-10
@@ -77,7 +77,7 @@ block content
 				
 				if user.services.github.isConfigured || user.services.twitter.isConfigured || user.services.google.isConfigured || user.services.facebook.isConfigured
 					hr.line-dashed
-				if user.services.github.isConfigured
+				// -if user.services.github.isConfigured
 					.form-group
 						label.col-sm-2.control-label Github
 						.col-sm-10.text-muted.faux-label
@@ -116,7 +116,7 @@ block content
 					.col-sm-10
 						label.checkbox-inline
 							input(type='checkbox', name='isPublic', value='true', checked=user.isPublic ? 'true' : null)
-							|  Show my profile on the SydJS website
+							|  Show my profile on the Bendigo Gig Guide website
 				.form-group
 					label.col-sm-2.control-label Website
 					.col-sm-10: input(type='text', name='website' value=user.website).form-control
@@ -157,11 +157,11 @@ block content
 					.form-group
 						label.col-sm-2.control-label I have...
 						.col-sm-10
-							input(type='text', name='mentoring.have', placeholder='eg; Ruby, Python', value=user.mentoring.have).form-control
+							input(type='text', name='mentoring.have', placeholder='eg; Singing, Guitar, Marketing', value=user.mentoring.have).form-control
 					.form-group
 						label.col-sm-2.control-label I want...
 						.col-sm-10
-							input(type='text', name='mentoring.want', placeholder='eg; HTML, CSS', value= user.mentoring.want).form-control
+							input(type='text', name='mentoring.want', placeholder='eg; Banjo, Sound', value= user.mentoring.want).form-control
 				hr.mv-2
 				button(type='submit', data-loading-text="Saving...").btn.btn-primary Save profile
 						

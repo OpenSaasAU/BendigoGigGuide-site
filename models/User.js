@@ -103,7 +103,7 @@ User.add({
 		}
 	}
 }, 'Meta', {
-	talkCount: { type: Number, default: 0, noedit: true },
+	artistCount: { type: Number, default: 0, noedit: true },
 	lastRSVP: { type: Date, noedit: true }
 });
 
@@ -122,13 +122,13 @@ User.schema.pre('save', function(next) {
 			return done();
 		},
 		function(done) {
-			keystone.list('Talk').model.count({ who: member.id }).exec(function(err, count) {
+			keystone.list('Artist').model.count({ who: member.id }).exec(function(err, count) {
 				if (err) {
-					console.error('===== Error counting user talks =====');
+					console.error('===== Error counting user artists =====');
 					console.error(err);
 					return done();
 				}
-				member.talkCount = count;
+				member.artistCount = count;
 				return done();
 			});
 		},
@@ -154,7 +154,7 @@ User.schema.pre('save', function(next) {
 */
 
 User.relationship({ ref: 'Post', refPath: 'author', path: 'posts' });
-User.relationship({ ref: 'Talk', refPath: 'who', path: 'talks' });
+User.relationship({ ref: 'Artist', refPath: 'who', path: 'artists' });
 User.relationship({ ref: 'RSVP', refPath: 'who', path: 'rsvps' });
 
 
@@ -205,11 +205,11 @@ User.schema.methods.resetPassword = function(callback) {
 		new keystone.Email('forgotten-password').send({
 			user: user,
 			link: '/reset-password/' + user.resetPasswordKey,
-			subject: 'Reset your SydJS Password',
+			subject: 'Reset your Bendigo Gig Guide Password',
 			to: user.email,
 			from: {
-				name: 'SydJS',
-				email: 'contact@sydjs.com'
+				name: 'Bendigo Gig Guide',
+				email: 'contact@bendigogigguide.com.au'
 			}
 		}, callback);
 	});
