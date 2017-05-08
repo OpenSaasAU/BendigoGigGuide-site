@@ -1,34 +1,14 @@
-//- SITE FOOTER
-footer.site-footer.site-footer--sticky: .container
-	.row
-		.col-sm-4
-			h5.footer-heading About
-			p The Bendigo Gig Guide aims to provide an up to date source for all your local music 
-			ul.list-inline
-				li: a(href='/about') More about Bendigo Gig Guide
-				li: a(href='http://www.opensaas.com.au/contact' rel='external') Contact us
+footer#footer
+    ul.icons
+    ul.copyright
+        li
+            | &copy; 
+            a(href='http://www.opensaas.com.au', target='_blank') OpenSaas.
+            |  All rights reserved.
+        li
+            | Hosted by: 
+            a(href='http://www.opensaas.com.au', target='_blank') OpenSaas.
+        li
+            | Design: 
+            a(href='http://html5up.net') HTML5 UP
 
-		.col-sm-8
-			.row
-				.col-xs-4
-					h5.footer-heading Members
-					ul
-						li: a(href='/members') Members
-						li: a(href='/mentoring') Mentoring
-						li: a(href='/members/mentors') Mentors
-						if !user
-							li: a(href='/join').js-auth-trigger Become a Member
-				.col-xs-4
-					h5.footer-heading Resources
-					ul
-						li: a(href='/venues') Venues
-						li: a(href='/links') Links
-				.col-xs-4
-					h5.footer-heading Sponsors
-					ul: each sponsor in sponsors
-						li 
-							a(href= sponsor.website, rel='external')= sponsor.name 
-							i
-	.row.footer-copyright
-		p Copyright &copy; 2017 <a href='http://www.opensaas.com.au' rel='external'>OpenSaas</a>. Powered by <a href='http://keystonejs.com' rel='external'>KeystoneJS</a>.
-		p If you run a Gig Guide, please feel free to clone our site and make your own! You can <a href="https://github.com/OpensaasAU/BendigoGigGuide-site" rel='external'>find it on GitHub</a>.

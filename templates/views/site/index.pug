@@ -1,111 +1,79 @@
 extends ../../layouts/default
 
 
-//- INCLUDES
-include ../../mixins/post
-include ../../mixins/gig-artist
-include ../../mixins/advertisement
 
-//- INTRO
 block intro
-
-	//- HERO
-	if !gig
-		h2.text-center You've just deployed a new site! Go add some data :)
-	else
-		article#hero.hero-gig.hero-gig--next
-			
-			//- Intro
-			section.hero-intro.hero-intro--hasmask
-				.hero-background
-					//-img(src='/images/placeholders/sydney-1.jpg')
-				.hero-intro-content
-					h5.subtitle #{gig.state == 'active' ? 'Next' : 'Last'} Gig
-					h1.title= gig.name
-					p.byline: strong #{gig._.startDate.format('ddd, DD MMM YYYY')} &#8212; #{gig._.startDate.format('h:mma')} - #{gig._.endDate.format('h:mma')}
-					p.byline #{gig.place} &#8212; 
-						a(href='http://maps.google.com.au/?daddr=' + (gig.map || gig.place), target='_blank') Directions
-				if gig.state === 'active'
-					#react-hero-button
-			//- Details
-			section.hero-details: .container
-				.row: .col-sm-10.col-sm-offset-1: .row
-					
-					//- Description
-					.col-md-5
-						//- h3.mb-1 The gig
-						.description!= gig.description
-
-					//- Talks
-					.col-md-6.col-md-offset-1
-						if gig.artists.length
-							//- h3.mb-1 The talks
-							.gig-talks
-								ul.list-unstyled.talks-list
-									each talk in gig.talks
-										li.talk.row
-											.col-xs-3
-												.talk__speakers
-													if artist.who.length
-														each speaker, i in talk.who
-															if speaker.isGroup
-																img(src=speaker.photo.exists ? speaker.photo.url : speaker.avatarUrl || '/images/avatar.png', width=160, height=160, alt=speaker.name.full, class=talk.who.length > 1 ? 'talk__photo--mini' : null).talk__photo__group
-															else
-																img(src=speaker.photo.exists ? speaker._.photo.crop(320,320) : speaker.avatarUrl || '/images/avatar.png', width=160, height=160, alt=speaker.name.full, class=talk.who.length > 1 ? 'talk__photo--mini' : null).talk__photo
-													else
-														img(src='/images/avatar.png', width=160, height=160, alt='There is no speaker...').talk__photo
-												//- if talk.who.length
-													.talkers
-														for photo in talk.who
-															img(src='http://fillmurray.com/100/100').img-circle
-											.col-xs-9
-												.talk-summary
-													h5.title= talk.name
-													p.subtitle.mb-1 by 
-														each speaker, i in artist.who
-															if i
-																| , 
-															if speaker.isPublic 
-																a(href=speaker.url)=speaker.name.full
-															else
-																=speaker.name.full
-													.summary!= talk.description
-				//- Attending
-				section.attending
-					#react-attending
-
-//- BODY
+    section#banner
+        h2 Bendigo Gig Guide
+        p Your guide to live music in Bendigo
+        ul.actions
+            li
+                a.button.special(href='http://www.opensaas.com.au/contact.html', target='_blank') Contact
+                
 block content
-	.page-content
-		
-		//- About
-		article.section.section--featured.home-about: .container
-			h2 In Bendigo and into Live Music? You need to join The Bendigo Gig Guide!
-			.row: .col-sm-8.col-sm-offset-2
-				p.lead Providing an up to date source for all your local live music in Bendigo 
-			if !user
-				.row: .col-sm-4.col-sm-offset-4
-					a(href='/join', data-from=page.path).js-auth-trigger.btn.btn-lg.btn-block.btn-primary.mv-1
-						span.text-caps Join Bendigo Gig Guide now
-			p.mt-1
-				a(href='/about') Learn more about Bendigo Gig Guide
-				|  &nbsp;&middot;&nbsp; 
-				a(href='/members') Find your friends in Bendigo Gig Guide
-			//-p.mt-1: a(href="https://twitter.com/sydjs", class="twitter-follow-button", data-show-count="true", data-size="large") Follow @sydjs
-//- JS
-block js
+    section#main.container
+        section.box.special
+            header.major
+                h2  The Bendigo Live Music Gig Guide
+                #calendar
+                p
+                    | Information on local live music. If you are interested in helping or supporting this project in anyway please 
+                    a(href='http://www.opensaas.com.au/contact.html', target='_blank') Contact Us.
+            |
+            span.image.featured
+                img(src='images/pic01.jpeg', alt='')
+        section.box.special.features
+            .features-row
+                section
+                    span.icon.major.fa-filter.accent2
+                    h3 Bendigo Gig Calendar - Coming Soon
+                    p
+                        | Sort and filter local live music according to you tastes and availability - 
+                        a(href='http://www.opensaas.com.au/contact.html', target='_blank') Contact Us
+                        |  to get involved
+                section
+                    span.icon.major.fa-area-chart.accent3
+                    h3 Artists and Venues - Coming Soon
+                    p
+                        | If you are an artist or run a venue - add, update and manage your upcoming events - 
+                        a(href='http://www.opensaas.com.au/contact.html', target='_blank') Contact Us
+                        |  to get involved
+        .row
+            .d6u(class='c12u(narrower)')
+                section.box.special
+                    span.image.featured
+                        img(src='/images/OpenSaasLogo.jpg', alt='')
+                    h3
+                        | Website by 
+                        a(href='http://www.opensaas.com.au', target='_blank') OpenSaas.
+                    p
+                    ul.actions
+                        li
+                            a.button.alt(href='http://www.opensaas.com.au', target='_blank') Learn More
+            .d6u(class='c12u(narrower)')
+                section.box.special
+                    span.image.featured
+                        img(src='images/OldChurchLogo.png', alt='')
+                    h3
+                        | In partnership with 
+                        a(href='http://www.theoldchurchonthehill.com.au', target='_blank') The Old Church on the Hill
+                    p
+                    ul.actions
+                        li
+                            a.button.alt(href='http://www.theoldchurchonthehill.com.au', target='_blank') Learn More
+                
+block js                 
+    script(src='/js/jquery/dist/jquery.min.js')
+    script(src='/js/jquery.dropotron.min.js')
+    script(src='/js/jquery.scrollgress.min.js')
+    script(src='/js/skel.min.js')
+    script(src='/js/util.js')
+    script(src='/js/moment/min/moment.min.js')
+    script(src='/js/fullcalendar/fullcalendar.min.js')
+    script(src='//cdn.jsdelivr.net/qtip2/3.0.3/jquery.qtip.min.js')
+    //if lte IE 8
+      script(src='/js/ie/respond.min.js')
+    script(src='/js/main.js')
+    script(src='/js/gigGuide/gigGuideBasicView.js')
+        
 
-	if gig
-		script.
-			SydJS.currentGigId = !{JSON.stringify(gig.id)};
-	if user
-		script.
-			SydJS.user = !{JSON.stringify(user)};
-
-	//- REACT SCRIPTS
-	script(src='/js/packages.js')
-	script(src='/js/home.js')
-	script.
-		!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
-	if google_api_key
-		script(src!='https://maps.googleapis.com/maps/api/js?key=' + google_api_key + '&libraries=places')

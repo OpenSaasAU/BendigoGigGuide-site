@@ -14,8 +14,18 @@ html
 		
 		title= page.title
 		link(rel="shortcut icon", href="/favicon.ico", type="image/x-icon")
-		link(href="/styles/site.min.css", rel="stylesheet")
-		
+		//- link(href="/styles/site.min.css", rel="stylesheet")
+		meta(name='viewport', content='width=device-width, initial-scale=1')
+		//if lte IE 8
+		script(src='/js/ie/html5shiv.js')
+		link(rel='stylesheet', href='/styles/main.css')
+		//if lte IE 8
+		//-link(rel='stylesheet', href='assets/css/ie8.css')
+		link(href='/styles/components/fullcalendar/fullcalendar.min.css', rel='stylesheet')
+		link(href='/styles/components/fullcalendar/fullcalendar.print.min.css', rel='stylesheet', media='print')
+		link(href='//cdn.jsdelivr.net/qtip2/3.0.3/jquery.qtip.min.css', rel='stylesheet')
+
+
 		if user && user.canAccessKeystone
 			link(href="/keystone/styles/content/editor.min.css", rel="stylesheet")
 
