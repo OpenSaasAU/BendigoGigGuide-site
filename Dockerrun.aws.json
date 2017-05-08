@@ -3,7 +3,7 @@
   "Volumes": [],
   "Ports": [
     {
-      "ContainerPort": "4001"
+      "ContainerPort": "3000"
     }
   ]
 }
