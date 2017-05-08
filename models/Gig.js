@@ -46,6 +46,8 @@ Gig.add({
 
 Gig.relationship({ ref: 'Artist', refPath: 'who', path: 'artists' });
 Gig.relationship({ ref: 'RSVP', refPath: 'who', path: 'rsvps' });
+Gig.relationship({ ref: 'Venue', refPath: 'location', path: 'venue' });
+
 
 
 
@@ -136,7 +138,7 @@ Gig.schema.methods.notifyAttendees = function(req, res, next) {
 
 Gig.schema.set('toJSON', {
 	transform: function(doc, rtn, options) {
-		return _.pick(doc, '_id', 'name', 'startDate', 'endDate', 'place', 'map', 'description', 'rsvpsAvailable', 'remainingRSVPs');
+		return _.pick(doc, '_id', 'name', 'startDate', 'endDate', 'place', 'map', 'description', 'rsvpsAvailable', 'remainingRSVPs', 'venue', 'gigUrl');
 	}
 });
 

@@ -122,6 +122,8 @@ exports = module.exports = function (app) {
 	app.all('/api/me/gig', routes.api.me.gig);
 	app.all('/api/stats', routes.api.stats);
 	app.all('/api/gig/:id', routes.api.gig);
+    app.all('/api/gigs', routes.api.gigs);
+	
 
 	// API - App
 	app.all('/api/app/status', routes.api.app.status);

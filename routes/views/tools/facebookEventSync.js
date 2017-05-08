@@ -61,15 +61,15 @@ exports = module.exports = function(req, res) {
                         if (err) return callback(err);
                         if (!gig) {
                             request('https://graph.facebook.com/v2.9/' + rawEvent.id + '?access_token=' + locals.fbAccessToken, function (err, response, body) {
-                                event = JSON.parse(body);
-                                var thisVenueId = '';
+                                let event = JSON.parse(body);
+                                let thisVenueId = '';
                                 async.series([function(venueCallback){
                                     Venue.model.findOne()
                                         .where('facebookId', event.place.id)
                                         .exec(function (err, venue) {
                                             if (err) return venueCallback(err);
                                             if (!venue) {
-                                                var thisVenueLocation = null;
+                                                let thisVenueLocation = null;
                                                 if (event.place.location){
                                                     thisVenueLocation = {
                                                         name: event.place.name,
@@ -156,7 +156,8 @@ exports = module.exports = function(req, res) {
                                 name: event.name,
                                 description: eventDescription,
                                 startDate: event.start_time,
-                                endDate: event.end_time
+                                endDate: event.end_time,
+                                gigUrl: 'https://www.facebook.com/events/' + event.id
                             };
                             updater.process(thisEvent, {
                                 flashErrors: true,
