@@ -1,5 +1,5 @@
 $(document).ready(function() {
-	var url = 'http://localhost:3000/api/gigs';	
+	var url = '/api/gigs';	
     $.ajax({ 
         url: url, 
         type: 'GET',
