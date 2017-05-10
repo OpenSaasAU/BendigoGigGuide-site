@@ -48,7 +48,6 @@ exports = module.exports = function(req, res) {
         if (err) {
             rtn.err = err;
         }
-        console.log('rtn: ', rtn);
         res.apiResponse(rtn);
     });
 }
