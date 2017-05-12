@@ -31,6 +31,7 @@ $(document).ready(function() {
 				right: 'month,basicWeek,basicDay'
 			},
 			//defaultDate: '2017-02-12',
+            timezone: 'local',
 			navLinks: true, // can click day/week names to navigate views
 			editable: false,
 			eventLimit: true, // allow "more" link when too many events
