@@ -64,6 +64,7 @@ exports = module.exports = function(req, res) {
                                 let event = JSON.parse(body);
                                 let thisVenueId = '';
                                 async.series([function(venueCallback){
+                                    if (!event.place) return venueCallback();
                                     Venue.model.findOne()
                                         .where('facebookId', event.place.id)
                                         .exec(function (err, venue) {
