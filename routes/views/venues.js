@@ -9,7 +9,7 @@ exports = module.exports = function(req, res) {
 	
 	// locals.section = 'members';
 	
-	view.query('venues', Venue.model.find().sort('name'), 'members');
+	view.query('venues', Venue.model.find().where('state', 'active').sort('name'), 'members');
 	
 	view.render('site/venues');
 	

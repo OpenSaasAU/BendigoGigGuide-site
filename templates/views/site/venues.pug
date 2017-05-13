@@ -4,21 +4,21 @@ include ../../mixins/organisation
 
 block intro
 	.page-intro: .container
-		h1 Organisations
-		p.lead The organisations and people who are part of SydJS. Should you be here? Join us!
+		h1 Venues
+		p.lead The Venues, Organisations and people who are part of the Bendigo Gig Guide. Should you be here? Join us!
 		//- .buttons
 			if !user
-				a(href='/join').btn.btn-primary Join SydJS
+				a(href='/join').btn.btn-primary Join Bendigo Gig Guide
 			a(href='/members').btn.btn-default View Members
 			a(href='/members/mentors').btn.btn-default View Mentors
 
 block content
 	.page-content: .container
 		.organisations
-			if organisations.length
-				each org, i in organisations
+			if venues.length
+				each org, i in venues
 					if i
 						hr
 					+organisation(org)
 			else
-				h3.text-muted There are no organisations yet.
+				h3.text-muted There are no venues yet.
